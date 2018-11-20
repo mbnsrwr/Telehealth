@@ -1,0 +1,91 @@
+<% include partials/head %>
+ <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">All Doctors</li>
+      </ol>
+		<div class="box_general">
+			<div class="header_box">
+				<h2 class="d-inline-block">All Doctors list</h2>
+			</div>
+			<div class="list_general">
+				<ul><% for(var i = 0; i < docs.length; i++){%>
+					<li>
+						<figure><img src="/img/doctor_listing_1.jpg" alt=""></figure>
+						<small><%= docs[i].speciality %></small>
+						<h4>Dr. <%= docs[i].fName + ' ' + docs[i].lName %></h4>
+						<p>Email: <%=docs[i].email%><br>
+                           Gender: <%=docs[i].gender%><br>
+                           identityId: <%= cred[i].identityId%><br>
+                           <a class="btn_1 gray delete" href="#"> <%= cred[i].state%></a>
+                          </p>
+                        <%if(cred[i].state !== "REVOKED"){%>
+						<input type="hidden" id = <%= "hidden"+ i%> value = <%= cred[i].identityId %> >
+						<ul class="buttons">
+							<li><a class="btn_1 gray delete" id= <%- '"submit' + i + '"'%> href="#"> Revoke Account</a></li>
+						</ul>
+                        <% } %>
+					</li>
+					<% } %>
+					
+				</ul>
+			</div>
+		</div>
+		<!-- /box_general-->
+<% include partials/foot %>
+
+
+<script>
+var apiUrl = location.protocol + '//' + location.host;
+ 
+console.log(apiUrl);
+ <%  for(var i = 0; i < docs.length; i++) { %>  
+//check user input and call server to create dataset
+$(<%- '"#submit'+ i +'"' %>).click(function (event) {
+  event.preventDefault();
+    var doctor = $( <%- '"#hidden'+ i+ '"' %> ).val();
+     //create json data
+    var inputData = '{' + '"doctor" : "' + doctor + '"}';
+    console.log(typeof(inputData));
+    console.log(inputData);
+
+    $.ajax({
+        type: 'POST',
+        url: apiUrl + '/admin/revoke',
+        data: inputData,
+        dataType: 'json',
+        contentType: 'application/json',
+        beforeSend: function () {
+            //display loading
+            
+        },
+        success: function (data) {
+          if ( data.success ) {
+             location.reload();
+          }
+            //check data for error
+            if (data.error) {
+                document.getElementById('page').style.display = "block";
+                alert(data.error);
+                return;
+            } else {
+                //notify successful registration
+                document.getElementById('successful-registration').style.display = "block";
+                document.getElementById('registration-info').style.display = "none";
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+           //reload on error
+            alert("Error: Try again")
+            console.log(errorThrown);
+            console.log(textStatus);
+            console.log(jqXHR);
+        }
+    });
+});
+<% } %>
+</script>

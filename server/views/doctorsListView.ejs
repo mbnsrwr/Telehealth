@@ -1,0 +1,70 @@
+<% include partials/head %>
+	
+   <main>
+   <div id="results">
+       <div class="container">
+           <div class="row">
+               <div class="col-md-6">
+                   <h4><strong>Showing Results for </strong> <%= text %></h4>
+               </div>
+               </div>
+           </div>
+           <!-- /row -->
+       </div>
+       <!-- /container -->
+   </div>
+   <!-- /results -->
+	   
+	<div class="container margin_60_35">
+		<div class="row">
+			<div class="col-lg-8">
+				<div class="row">
+					<% for (var key = 0; key < data.length; key++) { %>
+					<div class="col-md-6">
+						<div class="box_list wow fadeIn">
+							<figure>
+								<a href="/doctor/1"><img src="/img/doctor_listing_1.jpg" class="img-fluid" alt="">
+									<div class="preview"><span>Read more</span></div>
+								</a>
+							</figure>
+							<div class="wrapper">
+								<small><%= data[key].speciality %></small>
+								<h3>Dr. <%= data[key].fName %> <%= data[key].lName %></h3>
+
+								<p><small>Email:  <%= data[key].email %><br>
+									Experience:  <%= data[key].experience %>
+									</small>
+								</p>
+								<!--span class="rating"><i class="icon_star voted"></i><i class="icon_star voted"></i><i class="icon_star voted"></i><i class="icon_star"></i><i class="icon_star"></i> <small>(145)</small></span>
+								<a href="badges.html" data-toggle="tooltip" data-placement="top" data-original-title="Badge Level" class="badge_list_1"><img src="/img/badges/badge_1.svg" width="15" height="15" alt=""></a-->
+							</div>
+							<ul><%if(data[key].appointments) { %>
+								<li><i class="icon-eye-7"></i> <%= data[key].appointments.length %> <small>Appointments</small></li>
+								<% } else { %>
+									<li><i class="icon-eye-7"></i> 0 <small>Appointment</small></li>
+								<%}%>
+								<li><a href="/doctor/<%=data[key].email%>">Book</a></li>
+							</ul>
+						</div>
+					</div>
+				<% } %>
+					<!-- /box_list -->
+				</div>
+				<!-- /row -->
+
+			</div>
+			<!-- /col -->
+			
+			<aside class="col-lg-4" id="sidebar">
+				<div id="map_listing" class="normal_list">
+				</div>
+			</aside>
+			<!-- /aside -->
+			
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+	</main>
+	<!-- /main -->
+<% include partials/foot %>

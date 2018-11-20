@@ -1,0 +1,28 @@
+/**
+  * A library of standard reusable types
+*/
+
+namespace composer.base
+
+/**
+ * A concept for a simple street address
+ */
+concept Address {
+  o String city optional
+  o String street optional
+}
+
+
+
+/**
+ * An abstract participant type in this business network
+ */
+abstract participant Person identified by email{
+ // o String personId
+  o String email 
+  o String fName
+  o String lName
+  o String gender optional
+  o String dob optional
+//  o Address address optional
+}

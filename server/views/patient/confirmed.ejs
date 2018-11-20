@@ -1,0 +1,164 @@
+<% include partials/head %>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Patient Dashboard </a>
+        </li>
+        <li class="breadcrumb-item active">Appointments</li>
+      </ol>
+      <div class="box_general">
+        <div class="header_box">
+          <h2 class="d-inline-block">Confirmed Appointments List</h2>
+          </div>
+        </div>
+        <div class="list_general">
+          <ul><li>
+            <% if (asset.length == 0) { %>
+              <h4> No Confirmed Appointment!!</h4>
+              <div id="toast"><div id="img"><i class="fa fa-fw fa-bell-o"></i></div><div id="desc"> No Confirmed Appointment! </div></div>
+            <% } %>
+          </li></ul>
+          <ul>
+            <%  for(var i = 0; i < asset.length; i++) { %>
+            <li>
+              <figure>
+                <img src="/img/avatar1.jpg" alt="">
+              </figure>
+              <h4>Dr. <%= doc[i].fName + ' ' + doc[i].lName %>
+              </h4>
+              <ul class="booking_details">
+                <li>
+                  <strong>Booking date</strong> <%= asset[i].date %></li>
+                <li>
+                  <strong>Booking time</strong> <%= asset[i].time  %></li>
+                <li>
+                  <strong>Speciality</strong> <%= doc[i].speciality  %></li>
+                <li>
+                  <strong>Telephone</strong> 0043 432324</li>
+                <li>
+                  <strong>Email</strong>
+                  <%= doc[i].email %>
+                </li>
+              </ul>
+              <ul class="buttons">
+                <li>
+                  <% if(asset[i].status.replace(/"/g, '') === "Appointment Created") {%> 
+                    <i class="pending">Pending</i>
+                  <% } %>  
+                  <%if(asset[i].status.replace(/"/g, '') === "Appointment Cancelled") { %>
+                    <i class="cancel">Canceled</i>
+                  <% } %>  
+                   <%if(asset[i].status.replace(/"/g, '') === "Appointment Confirmed") { %>
+                    <li>
+                    <i class="approved" style="margin-right:-10px;">Approved</i><br>
+                    </li>
+                    
+                    <br/>
+                    
+                    <% if(med.myDoctors.length > 0) {
+                      var a = 0;
+                        for(var vk = 0; vk < med.myDoctors.length; vk ++ ){
+                          if(med.myDoctors[vk].split("#")[1] == doc[i].email)
+                            a++;
+                      }
+                    %>
+                    <%  if(a == 0 ) { %>
+                    <li>
+                        <a class="btn_1 gray approve" data-toggle="modal" data-target=<%= "#modal-access"+ i%> style="margin-top:15px;">
+                            <i class="fa fa-fw fa-check-circle-o"></i>Allow Record Access</a>
+                    </li>
+                      <% } else { %>
+                          <a class="btn_1 gray approve" data-toggle="modal" data-target="#modal" style="margin-top:15px;">
+                            <i class="fa fa-fw fa-check-circle-o"></i> Allowed </a>
+                      <% } %>
+                     <% } else { %>
+                         <li>
+                        <a class="btn_1 gray approve" data-toggle="modal" data-target=<%= "#modal-access"+ i%> style="margin-top:15px;">
+                            <i class="fa fa-fw fa-check-circle-o"></i>Allow Record Access</a>
+                    </li>
+                      <% } %>
+                    <% } %>
+                </li>
+              </ul>
+            </li>
+            <% } %>
+           
+          </ul>
+        </div>
+      </div>
+      <!-- /box_general-->
+      <%  for(var i = 0; i < asset.length; i++) { %>
+                  <!-- Access Modal-->
+    <div class="modal fade" id=<%= "modal-access"+ i%> tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Allow Record Access?</h5>
+              <input type="hidden" id = <%= "hidden"+ i%> value = <%= asset[i].doctor.split("#")[1] %> >
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body">Doctor will be able to see you Medical history and prescribe best suitable medicine.</div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+              <a class="btn btn-primary" id= <%- '"submit' + i + '"'%> href="c">Allow</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+<% include partials/foot %>
+
+<script>
+var apiUrl = location.protocol + '//' + location.host;
+ 
+console.log(apiUrl);
+ <%  for(var i = 0; i < asset.length; i++) { %>  
+//check user input and call server to create dataset
+$(<%- '"#submit'+ i +'"' %>).click(function (event) {
+  event.preventDefault();
+    var doctor = $( <%- '"#hidden'+ i+ '"' %> ).val();
+     //create json data
+    var inputData = '{' + '"doctor" : "' + doctor + '"}';
+    console.log(typeof(inputData));
+    console.log(inputData);
+
+    $.ajax({
+        type: 'POST',
+        url: apiUrl + '/patient/AddDoctor',
+        data: inputData,
+        dataType: 'json',
+        contentType: 'application/json',
+        beforeSend: function () {
+            //display loading
+             $(".spinner").show();
+        },
+        success: function (data) {
+          if ( data.success ) {
+             location.reload();
+          }
+            //check data for error
+            if (data.error) {
+                alert(data.error);
+                 $(".spinner").hide();
+                return;
+            } else {
+                //notify successful registration
+                document.getElementById('successful-registration').style.display = "block";
+                document.getElementById('registration-info').style.display = "none";
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+           //reload on error
+            alert("Error: Try again")
+            console.log(errorThrown);
+            console.log(textStatus);
+            console.log(jqXHR);
+        }
+    });
+});
+<% } %>
+</script>

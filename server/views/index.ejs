@@ -1,0 +1,62 @@
+<% include partials/head %> 
+	<main>
+		<div class="hero_home version_2">
+			<div class="content">
+				<h3>Find a Doctor!</h3>
+				<p>
+					Search for the doctor with his Speciality!
+				</p>
+				<form method="post" action="/search">
+					<div id="custom-search-input">
+						<div class="input-group">
+							<input type="text" name ="search" class=" search-query" required placeholder="Ex. Name, Specialization ....">
+							<input type="submit" class="btn_search" value="Search">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- /Hero -->
+		<div class="bg_color_1">
+		<%if(data.length >= 0 ) { %>
+			<div class="container margin_120_95">
+				<div class="main_title">
+					<h2>Most Recent Doctors</h2>
+					<p>All the doctors on our platform are best in thier field.</p>
+				</div>
+				<div class="row">
+				   <% for (var i = 0; i < data.length; i++) { %>
+					<div class="col-lg-4 col-md-6">
+						<div class="box_list home">
+							<figure>
+								<a href="/doctor/<%=data[i].email%>"><img src="img/doctor_listing_1.jpg" class="img-fluid" alt=""></a>
+								<div class="preview"><span>Read more</span></div>
+							</figure>
+							<div class="wrapper">
+								<small><%= data[i].speciality %></small>
+								<h3>Dr. <%= data[i].fName %> <%= data[i].lName %></h3>
+								<p><small>Email:  <%= data[i].email %><br>
+									Experience:  <%= data[i].experience %>
+									</small>
+								</p>
+								</div>
+							<ul><% if(data[i].appointments) { %>
+								<li><i class="icon-eye-7"></i> <%= data[i].appointments.length %> <small>Appointments</small></li>
+								<% } else { %>
+									<li><i class="icon-eye-7"></i> 0 <small>Appointment</small></li>
+								<%}%>
+								<li><a href="/doctor/<%=data[i].email%>">Book</a></li>
+							</ul>
+						</div>
+					</div>
+				<% } %>
+				</div>
+				<!-- /row -->
+				<% } %>
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /white_bg -->
+	</main>
+	<!-- /main content -->
+<% include partials/foot %>

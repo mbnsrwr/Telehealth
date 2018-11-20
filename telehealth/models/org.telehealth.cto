@@ -1,0 +1,132 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Write your model definitions here
+ */
+
+namespace org.telehealth
+
+import composer.events.*
+import composer.base.*  
+
+/**
+ * A Doctor is a type of participant in the network
+ */
+participant Doctor extends Person {
+  o String speciality
+  o String experience
+  --> Patient[] myPatients optional
+  --> Appointment[] appointments optional
+}
+/*
+* A Patient is a type of participant in the network
+*/
+participant Patient extends Person {
+  --> Doctor[] myDoctors optional
+  --> PatientRecord patientRecord optional
+  --> Appointment[] appointments optional
+}
+
+asset PatientRecord identified by recordID {
+  o String recordID
+  o Medication[] medications optional
+  --> Patient owner
+  --> Doctor[] myDoctors optional
+}
+/**
+* concept Report{
+  o String created
+  o String source
+}
+transaction  AddReport {
+  o String source
+  --> Appointment appointment
+}
+
+ */
+transaction CreatePatientRecord {
+  --> Patient owner
+}
+transaction addDoctor {
+ --> Patient patient
+ --> Doctor doctor
+}
+transaction rmDoctor {
+ --> Patient patient
+ --> Doctor doctor
+}
+
+concept Medication  {  
+  o String symptoms
+  o String created optional
+  o String[] medicines
+  o String[] dosage
+  o String[] notes
+  o String description
+  --> Appointment appointment
+}
+
+transaction  AddMedication {
+  o String symptoms
+  o String prescription
+  o String description
+  --> Appointment appointment
+}
+
+/**
+ * Defines a appointment between a patient and an doctor using
+*/
+asset Appointment identified by appointmentId {
+  o String appointmentId
+  o String status 
+  o String created optional
+  o String confirmed optional
+  o String canceled optional
+  o String completed optional
+  o String review optional
+  o Integer rating optional
+  o DateTime appointDateTime optional
+  o Boolean Access default = false
+  o String date
+  o String time
+  --> Doctor doctor
+  --> Patient patient
+}
+
+transaction RequestAppoint {
+  o String date
+  o String time
+  --> Doctor doctor
+  --> Patient patient
+}
+
+transaction CancelAppoint {
+  --> Appointment appointment
+}
+
+transaction ConfirmAppoint {
+  --> Appointment appointment
+  o Boolean access
+}
+
+transaction Complete {
+  --> Appointment appointment
+}
+
+transaction Review {
+  o String review
+  o Integer rate
+  --> Appointment appointment
+}

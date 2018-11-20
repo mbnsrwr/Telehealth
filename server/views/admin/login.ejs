@@ -1,0 +1,30 @@
+<% include ../partials/head %>
+
+<main>
+		<div class="bg_color_2">
+			<div class="container margin_60_35">
+				<div id="register">
+					<h1>Admin Login</h1>
+					<div class="row justify-content-center">
+						<div class="col-md-7">
+							<form action="/admin/login" method ="post">
+								<div class="box_form">
+									<div class="form-group">
+										<label>Access Card ID </label>
+										<input type="text" name="CardId" class="form-control" placeholder="access id for your account">
+									</div>
+                                    <div class="form-group text-center add_top_30">
+										<input class="btn_1" type="submit" value="Login">
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- /row -->
+				</div>
+				<!-- /register -->
+			</div>
+		</div>
+	</main>
+
+<% include ../partials/foot %>

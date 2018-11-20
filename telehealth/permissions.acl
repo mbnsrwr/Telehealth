@@ -1,0 +1,264 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *2-patient can submit appointrequest Transanction
+ *2-Patient can read,update his profile
+ *3-Patient can veiw asset patientRecords
+ *4-Patient can veiw his appointments
+ *
+ * 
+ *1-Doctor can veiw his appointments
+ *2-Doctor can Submit Confirm transaction
+ *3-Doctor can Submit Cancel transaction
+ *4-Doctor can Submit Complete transaction
+ *5-Doctor can veiw asset patientRecords for his patients
+ *6-Doctor can Submit AddMedication transaction for his patients
+ *7-Doctor can edit his profile
+ */
+
+rule R1a_PatientSeeUpdateThemselves {
+  description: "Patient can see and update their own record"
+  participant(t): "org.telehealth.Patient"
+  operation: READ, UPDATE
+  resource(v): "org.telehealth.Patient"
+  condition: (v.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R1c_PatientCanCreatePatientRecordsTranx {
+  description: "Patient can see create Record"
+  participant(t): "org.telehealth.Patient"
+  operation: CREATE
+  resource (v): "org.telehealth.CreatePatientRecord"
+  condition: (v.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R1c_PatientCanCreateaddDoctorTranx {
+  description: "Patient can see create Record"
+  participant(t): "org.telehealth.Patient"
+  operation: CREATE
+  resource (v): "org.telehealth.addDoctor"
+  condition: (v.patient.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R1c_PatientCanCreateRemoveDoctorTranx {
+  description: "Patient can see create Record"
+  participant(t): "org.telehealth.Patient"
+  operation: CREATE
+  resource (v): "org.telehealth.rmDoctor"
+  condition: (v.patient.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+
+
+rule R1c_PatientCanReadPatientRecords {
+  description: "Patient can see read Record"
+  participant(t): "org.telehealth.Patient"
+  operation: ALL
+  resource (v): "org.telehealth.PatientRecord"
+  condition: (v.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R2_EnableRequestAppointTxn {
+    description: "Enable Patients to submit RequestAppoint transactions"
+    participant: "org.telehealth.Patient"
+    operation: CREATE
+    resource: "org.telehealth.RequestAppoint"
+    action: ALLOW
+}
+
+rule R1b_PatientCanSeeTheirAppointments {
+  description: "Patient can see their own Appointments"
+  participant(t): "org.telehealth.Patient"
+  operation: READ,CREATE,UPDATE
+  resource(c): "org.telehealth.Appointment"
+  condition: (c.patient.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+/*
+rule R1c_PatientCanSeeTheirPatientRecords {
+  description: "Patient can see their own Records"
+  participant(t): "org.telehealth.Patient"
+  operation: READ
+  resource(c): "org.telehealth.PatientRecord"
+  condition: (c.owner.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}*/
+
+rule R2_PatientsCanSeeDoctors {
+  description: "Patient can see Doctors"
+  participant: "org.telehealth.Patient"
+  operation: READ
+  resource: "org.telehealth.Doctor"
+  action: ALLOW
+}
+/*
+rule AddDoctorstoMyDoctors {
+    description: "Enable Patient to addDoctor to PatientRecord"
+    participant(m): "org.telehealth.Patient"
+    operation: CREATE, UPDATE
+    resource(v): "org.telehealth.PatientRecord"
+    condition: (v.owner.getIdentifier() == m.getIdentifier())
+    action: ALLOW
+}
+*/
+// rule RemoveDoctorsfromMyDoctors {
+//     description: "Enable Patient to rmDoctor"
+//     participant(m): "org.telehealth.Patient"
+//     operation: CREATE, UPDATE
+//     resource(v): "org.telehealth.PatientRecord"
+//     condition: (v.owner.getIdentifier() == m.getIdentifier())
+//     action: ALLOW
+// }
+
+/** 
+ *1-Doctor can veiw his appointments
+ *2-Doctor can Submit Confirm transaction
+ *3-Doctor can Submit Cancel transaction
+ *4-Doctor can Submit Complete transaction
+ *5-Doctor can veiw asset patientRecords for his patients
+ *6-Doctor can Submit AddMedication transaction for his patients
+ *7-Doctor can edit his profile
+ */
+
+
+rule R1_DoctorsCanSeeifinmyDoctors {
+  description: "Doctors can see PatientRecord"
+  participant(t): "org.telehealth.Doctor"
+  operation: READ,UPDATE
+  resource(c): "org.telehealth.PatientRecord"
+  condition: (
+    c.myDoctors.some(function (doctor) {
+        return doctor.getIdentifier() === t.getIdentifier();
+        }
+    )
+  )  
+  action: ALLOW
+}
+
+rule AddMedicationToPatientRecords {
+    description: "Enable Patient to addMedication transaction"
+    participant(m): "org.telehealth.Doctor"
+    operation: UPDATE
+    resource(v): "org.telehealth.PatientRecord"
+    transaction(tx): "org.telehealth.AddMedication"
+    condition: (
+    tx.appointment.patient.myDoctors.some(function (doctor) {
+        return  (doctor.getIdentifier() === tx.appointment.doctor.getIdentifier() === m.getIdentifier())
+        }
+    )
+  )
+    action: ALLOW
+}
+
+
+ rule R1b_DoctorsCanSeeThemselves {
+  description: "Doctors can see their themselves"
+  participant(t): "org.telehealth.Doctor"
+  operation: READ,UPDATE
+  resource(c): "org.telehealth.Doctor"
+  condition: (c.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+ rule R1b_DoctorsCanSeetheirPatients {
+  description: "Doctors can see their Patients"
+  participant(t): "org.telehealth.Doctor"
+  operation: READ
+  resource(c): "org.telehealth.Patient"
+ // condition: (c.myDoctors && c.myDoctors.indexOf(t.getIdentifier()) > -1)
+  condition: (
+    c.myDoctors.some(function (doctor) {
+        return doctor.getIdentifier() === t.getIdentifier();
+        }
+    )
+  )  
+  action: ALLOW
+}
+
+ rule R1b_DoctorsCanSeeTheirAppointments {
+  description: "Doctors can see their own Appointments"
+  participant(t): "org.telehealth.Doctor"
+  operation: READ,UPDATE
+  resource(c): "org.telehealth.Appointment"
+  condition: (c.doctor.getIdentifier() == t.getIdentifier())
+  action: ALLOW
+}
+
+rule R2_EnableCancelAppointTxn {
+    description: "Enable Doctor to submit ConfirmAppoint transaction"
+    participant(m): "org.telehealth.Doctor"
+    operation: CREATE
+    resource(v): "org.telehealth.CancelAppoint"
+    condition: (v.appointment.doctor.getIdentifier() == m.getIdentifier())
+    action: ALLOW
+}
+
+rule R2_EnableConfirmAppointTxn {
+    description: "Enable Doctor to submit ConfirmAppoint transaction"
+    participant(m): "org.telehealth.Doctor"
+    operation: CREATE
+    resource(v): "org.telehealth.ConfirmAppoint"
+    condition: (v.appointment.doctor.getIdentifier() == m.getIdentifier())
+    action: ALLOW
+}
+
+rule R2_EnableCompleteTxn {
+    description: "Enable Doctor to submit Complete transaction"
+    participant(m): "org.telehealth.Doctor"
+    operation: CREATE
+    resource(v): "org.telehealth.Complete"
+    condition: (v.appointment.doctor.getIdentifier() == m.getIdentifier())
+    action: ALLOW
+}
+
+
+rule R2_CreateMedicationAsset {
+    description: "Enable Doctor to submit createMedication transaction"
+    participant(m): "org.telehealth.Doctor"
+    operation: CREATE
+    resource(v): "org.telehealth.AddMedication"
+    condition: (v.appointment.doctor.getIdentifier() == m.getIdentifier())
+    action: ALLOW
+}
+
+rule NetworkAdminUserMedication {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.telehealth.PatientRecord"
+    action: DENY
+}
+
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "ANY"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+
+
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}

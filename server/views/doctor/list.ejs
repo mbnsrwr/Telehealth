@@ -1,0 +1,149 @@
+<% include partials/head %>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Patient history</li>
+      </ol>
+		<div class="box_general">
+			<div class="header_box">
+				<h2 class="d-inline-block">Patinet History</h2>				
+			</div>
+			
+			<div class="list_general">
+			<ul><li>
+				<% if (data.patArray.length == 0) { %>
+					<h4> No EHR Access!!</h4>
+					<div id="toast"><div id="img"><i class="fa fa-fw fa-bell-o"></i></div><div id="desc"> No EHR Access! </div></div>
+				<% } %>
+			</li></ul>
+				<ul>
+					<% for(var i = 0; i < data.patArray.length; i++){ %>
+					<li>
+						<figure><img src="/img/avatar1.jpg" alt=""></figure>
+						<small>Patient Details</small>
+						<h4><%= data.patArray[i].fName %> <%= data.patArray[i].lName %></h4>
+						<p>Email :  <%= data.patArray[i].email %><br>
+						Gender :  <%= data.patArray[i].gender.toUpperCase() %><br></p>
+						<ul class="buttons">    
+							<p><a href="#" data-toggle="modal" data-target=<%="#modal-ehr" + i %> class="btn_1 gray">
+								<i class="fa fa-fw fa-user"></i> View EHR</a>
+							</p>
+						</li>
+						</ul>
+					</li>
+					<% } %>
+				</ul>
+			</div>
+		</div>
+		<%  for(var i = 0; i < data.patArray.length; i++) { %>
+   <!-- Approve Modal-->
+      <div class="modal tg-appointmentapprove tg-modal fade" id=<%="modal-ehr" + i %> tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content tg-modalcontent">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Medical Record</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="tg-tablescroll">
+                    <div class="tg-favoritlistingbox">
+                        <ul class="tg-favoritlist">
+                            <li>
+                                <div class="tg-favotirelistcontent">
+                                    <figure>
+                                        <a href="#">
+                                            <img src="/img/img-21.jpg" alt="image description">
+                                        </a>
+                                    </figure>
+                                    <div class="tg-listdata">
+                                        <h4>
+                                            <a href="#"><%= data.patArray[i].fName +' '+ data.patArray[i].lName %> </a>
+                                        </h4>
+                                        <span><strong>DOB</strong> : <%= data.patArray[i].dob %></span>
+                                    </div>
+                                </div>
+                                <div class="tg-amout">
+                                    <em>
+                                        <time datetime="2017-12-12"> <strong>Email</strong> : <%= data.patArray[i].email %> </time>
+                                    </em>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="tg-description">
+                                 <% for(var j = 0; j < data.recordArray[i].medications.length; j++){ %>
+															<div class="row" style="clear:both;">
+																	<div class="col-auto text-center flex-column d-none d-sm-flex">
+																			<div class="row h-50">
+																				
+																			</div>
+																			<h5 class="m-2">
+																					<span class="badge badge-pill bg-secondary">&nbsp;</span>
+																			</h5>
+																			<div class="row h-50">
+																				<div class="vl" style = "
+																					border-left: 2px #f8f8f8;
+																					height: 45%;
+																					position: absolute;
+																					left: 50%;
+																					margin-top:0px;
+																					margin-left: -1px;
+																					top: 0;">
+																					</div> 
+																			</div>
+																	</div>
+																	
+																	<div class="col py-2">
+																			<div class="card border-success shadow">
+																					<div class="card-body">
+																							<div class="float-right text-muted"><%= new Date(data.recordArray[i].medications[j].created) %></div>
+																							<h5 class="card-title text-muted"><%= data.recordArray[i].medications[j].symptoms %></h5>
+																							<p class="card-text"> <%= data.recordArray[i].medications[j].description %></p>
+																							<button class="btn btn-sm btn-outline-secondary float-right" style="clear:both" type="button" data-target=<%="#t2_details" + j %>  data-toggle="collapse">Show Medications ▼</button>
+																							<div class="collapse border" id=<%="t2_details" + j %> >
+																									<div class="p-2 text-monospace">
+																											<table class="table table-striped">
+																											<thead>
+																											<tr>
+																													<th> Drug </th>
+																													<th> Dosage  </th>
+																													<th> Notes </th>
+																											</tr>
+																											</thead>
+																											<tbody>
+																									<% for(var k = 0; k < data.recordArray[i].medications[j].dosage.length; k++){ %>
+																											<tr>
+																													<td><%= data.recordArray[i].medications[j].medicines[k] %></td>
+																													<td> <%= data.recordArray[i].medications[j].dosage[k] %> time(s) a day</td>
+																													<td> <%= data.recordArray[i].medications[j].notes[k] %></td>
+																											</tr>
+																									<% } %>   
+																											</tbody>
+																									</table>
+																									</div>
+																							</div>
+																					</div>
+																				</div>
+																			</div>
+																	</div>
+																	</ br>
+
+																<% } %>
+															<!--/row-->
+                            </div>
+                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>   
+
+    <% } %>
+
+<% include partials/foot %>

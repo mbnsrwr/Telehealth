@@ -1,0 +1,7 @@
+/**
+  * A library of standard reusable types
+*/
+namespace composer.events
+
+abstract event BasicEvent {
+}

@@ -1,0 +1,91 @@
+<% include ../partials/head %>
+	<main id ="main">
+		<div class="bg_color_2">
+			<div class="container margin_60_35">
+				<div id="register">
+					<h1>Please register to Findoctor!</h1>
+					<div class="row justify-content-center">
+						<div class="col-md-7">
+							<form id="checkform" data-toggle="validator" role="form">
+								<div class="box_form">
+									
+									<div class="form-group">
+										<label>Email</label>
+										<input type="email" id="email" class="form-control" placeholder="Your email address" required="required">
+										<div class="help-block with-errors"style="font-size:15px; color:red;"></div>
+									</div>
+									<div class="form-group">
+										<label>Access Card ID </label>
+										<input type="text" id="card-id" minlength = 6 class="form-control" placeholder="access id for your account" required="required" data-error="6 Characters required">
+										 <div class="help-block with-errors"style="font-size:15px; color:red;"></div>
+									</div>
+									<div class="form-group">
+										<label>Name</label>
+										<input type="text" id="fName" minlength = 4 class="form-control" placeholder="Your name" required="required" data-error="Firstname is required.">
+										<div class="help-block with-errors"style="font-size:15px; color:red;"></div>
+									</div>
+									<div class="form-group">
+										<label>Last name</label>
+										<input type="text" id="lName" minlength = 4 class="form-control" placeholder="Your last name" required="required" data-error="Lastname is required.">
+										<div class="help-block with-errors"style="font-size:15px; color:red;"></div>
+									</div>
+									<div class="form-group">
+										<label>Gender</label><br>
+										<input type="radio" id="gender" name="gender" value="male" checked><label style="margin-left:10px; margin-top:-50px; ">  Male</label>
+										<input type="radio" id="gender" name="gender" value="female"><label style="margin-left:10px;">  Female</label>
+										<input type="radio" id="gender" name="gender" value="other"><label style="margin-left:10px;">  Other</label>
+										<div class="help-block with-errors"style="font-size:15px; color:red;"></div>
+									</div>
+									<div class="form-group">
+										<label>Date of Birth</label>
+										<input id="dob" type="date" class="form-control"placeholder="Your DoB" width="276" required="required" data-error="Date of Birth is required."/>
+										<div class="help-block with-errors"style="font-size:15px; color:red;"></div>
+									</div>
+									<div id="pass-info" class="clearfix"></div>
+									<div class="checkbox-holder text-left">
+										<div class="checkbox_2">
+										<div class="form-group">
+											<input type="checkbox" value="accept_2" id="check_2" name="check_2" checked required="required" data-error="Please Chaeck the box to proceed.">
+											<label for="check_2"><span>I Agree to the <strong>Terms &amp; Conditions</strong></span></label>
+											<div class="help-block with-errors"style="font-size:15px; color:red;"></div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group text-center add_top_30">
+										<input class="btn_1 register-patient booker" type="submit" value="Submit">
+										
+									</div>
+									</form>
+								</div>
+								<p class="text-center"><small>All the credentials provided above Must be correct to best of your knowledge. Remember your Card ID.</small></p>
+						</div>
+					</div>
+					<!-- /row -->
+				</div>
+				<!-- /register -->
+			</div>
+		</div>
+	</main>
+
+	
+   
+	<!-- /main -->
+
+<% include ../partials/foot %>
+<script>
+	$(function(){
+	var beforedate = new Date();	
+    var dtToday = new Date(new Date().setDate(beforedate.getDate()-16*365));
+    
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+    if(month < 10)
+        month = '0' + month.toString();
+    if(day < 10)
+        day = '0' + day.toString();
+    
+    var maxDate = year + '-' + month + '-' + day;
+    $('#dob').attr('max', maxDate);
+});
+</script>

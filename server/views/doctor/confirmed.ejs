@@ -1,0 +1,283 @@
+<% include partials/head %>
+
+  <div class="content-wrapper">
+        <div class="container-fluid">
+            <!-- Breadcrumbs-->
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">Appointments</li>
+            </ol>
+            <div class="box_general">
+                <div class="header_box">
+                    <h2 class="d-inline-block">Confirmed Appointments List</h2>
+                </div>
+                <div class="list_general">
+                    <ul><li>
+                        <% if (asset.length == 0) { %>
+                            <h4> No Confirmed Appointments!!</h4>
+                            <div id="toast"><div id="img"><i class="fa fa-fw fa-bell-o"></i></div><div id="desc"> No Confirmed Appointments!! </div></div>
+                        <% } %>
+                    </li></ul>
+                    <ul>
+                        <%  for(var i = 0; i < asset.length; i++) { %>
+                        <li>
+                            <figure>
+                                <img src="/img/avatar1.jpg" alt="">
+                            </figure>
+                            <h4><%= pat[i].fName + ' ' + pat[i].lName %>
+                                <i class="approved">Approved</i>
+                            </h4>
+                            <ul class="booking_details">
+                                <li>
+                                    <strong>Booking date</strong> <%= asset[i].date %></li>
+                                <li>
+                                    <strong>Booking time</strong> <%= asset[i].time %> </li>
+                                <li>
+                                    <strong>Email</strong>
+                                   <%= pat[i].email %>
+                                </li>
+                            </ul>
+                            <ul class="buttons">
+                                <li>
+                                    <a class="btn_1 gray approve" data-toggle="modal" data-target=<%="#modal-complete" + i %> >
+                                        <i class="fa fa-fw fa-check-circle-o"></i>Add Prescription</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <% } %>
+                    </ul>
+                </div>
+                <div id="error"></div>
+            </div>
+
+
+<%  for(var i = 0; i < asset.length; i++) { %>
+   <!-- Approve Modal-->
+      <div class="modal tg-appointmentapprove tg-modal fade" id=<%="modal-complete" + i %> tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content tg-modalcontent">
+            <form is="check" data-toggle="validator" role="form">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Prescription</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="tg-tablescroll">
+                    <div class="tg-favoritlistingbox">
+                        <ul class="tg-favoritlist">
+                            <li>
+                                <div class="tg-favotirelistcontent">
+                                    <figure>
+                                        <a href="#">
+                                            <img src="/img/img-21.jpg" alt="image description">
+                                        </a>
+                                    </figure>
+                                    <div class="tg-listdata">
+                                        <h4>
+                                            <a href="#"><%= pat[i].fName + ' ' + pat[i].lName %></a>
+                                        </h4>
+                                        <span>Social Worker at Rival Links</span>
+                                    </div>
+                                </div>
+                                <div class="tg-amout">
+                                    <em>
+                                        <time datetime="2017-12-12"><%= asset[i].date %> @ <%= asset[i].time %></time>
+                                    </em>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="tg-description">
+                            <div class="box_general padding_bottom">
+                                <div class="header_box version_2">
+                                    <h2>
+                                        <i class="fa fa-folder"></i>Symptoms</h2>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>Symptoms</label>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <div class="form-group">
+                                            <input type="text" id= <%= "symptoms"+ i%> class="form-control" placeholder="Symptoms">
+                                            <input type="hidden" required="required" id = <%= "hidden"+ i%> value = <%= asset[i].appointmentId %> >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box_general padding_bottom">
+                                <div class="header_box version_2">
+                                    <h2>
+                                        <i class="fa fa-folder"></i>Medication
+                                    </h2>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h6>Drugs</h6>
+                                        <table id="pricing-list-container" style="width:100%;">
+                                            <tr class="pricing-list-item">
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <input type="text" name = <%= "med"+ i + '[]' %> class="form-control" placeholder="Medicine Name">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <input type="number" name = <%= "dosage"+ i + '[]'%> class="form-control" placeholder="Dosage per day">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <input type="text" name = <%= "note"+ i + '[]'%> class="form-control" placeholder="Notes">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="form-group">
+                                                                <a class="delete" href="#">
+                                                                    <i class="fa fa-fw fa-remove"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <a href="#0" class="btn_1 gray add-pricing-list-item">
+                                            <i class="fa fa-fw fa-plus-circle"></i>Add Item</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /box_general-->
+
+                            <div class="box_general padding_bottom">
+                                <div class="header_box version_2">
+                                    <h2>
+                                        <i class="fa fa-file-text"></i>Description</h2>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Notes and comments</label>
+                                            <textarea rows="5" id= <%= "description"+ i%> class="form-control" style="height:100px;" placeholder="Description"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tg-btnarea" >
+                                <div class="tg-leftbox" style="margin-left: 120px;">
+                                        <label class="container">Mark as Complete
+                                            <input type="checkbox" id = <%= "check"+ i%> checked="checked">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                </div>
+                                <a class="btn_1 gray approve" id= <%- '"submit' + i + '"'%> >
+                                    <i class="fa fa-fw fa-check-circle-o"></i>Submit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+     </div>   
+
+    <% } %>
+
+
+<% include partials/foot %>
+
+
+<script>
+
+var apiUrl = location.protocol + '//' + location.host;
+ 
+console.log(apiUrl);
+ <%  for(var i = 0; i < asset.length; i++) { %>  
+//check user input and call server to create dataset
+$(<%- '"#submit'+ i +'"' %>).click(function () {
+    var check = $(<%- '"#check'+ i + '"'%> ).is(':checked');  
+    var med = [];
+    var dosage = [];
+    var notes = [];
+    var symptoms = $(<%- '"#symptoms'+ i + '"'%> ).val();
+    var appointId = $( <%- '"#hidden'+ i+ '"' %> ).val();
+    var description = $(<%- '"#description'+ i + '"'%> ).val();
+    //get user input data
+    $(<%- "'input[name=" + '"med' + i + '[]"]'+ "'" %> ).each(function() { 
+      med.push($(this).val());
+    });
+    $(<%- "'input[name=" + '"dosage' + i + '[]"]'+ "'" %> ).each(function() { 
+      dosage.push($(this).val());
+    });
+    $(<%- "'input[name=" + '"note' + i + '[]"]'+ "'" %> ).each(function() { 
+      notes.push($(this).val());
+    });
+    if(symptoms==''){
+        $("#error").html('<div id="toast"><div id="img"><i class="fa fa-fw fa-bell-o"></i></div><div id="desc"> Field is required </div></div>');
+        var x = document.getElementById("toast")
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+        $(<%- '"#symptoms'+ i + '"'%> ).css("border", "2px red solid");
+        return;
+    }
+    var inputData = '[';
+    for( var j = 0; j < med.length; j++){
+        inputData += '{' ;
+        inputData += '"med" : "' + med[j] + '", ';
+        inputData += '"dosage" : "' + dosage[j] + '", ';
+        inputData += '"note" : "' + notes[j] + '" ';
+        inputData += '}';
+        if( j+1 != med.length ){
+            inputData += ',';
+        } else {
+            inputData += ']';
+        }
+    }
+    var postData = {'check': check,'symptoms': symptoms, 'appointId':appointId , 'inputData': inputData, 'description': description };
+    console.log(postData);
+    postData = JSON.stringify(postData);
+    console.log(postData);
+    $.ajax({
+        type: 'POST',
+        url: apiUrl + '/doctor/addMedication',
+        data: postData,
+        dataType: 'json',
+        contentType: 'application/json',
+        beforeSend: function () {
+            //display loading
+            $(".spinner").show();
+        },
+        success: function (data) {
+          if ( data.success ) {
+             location.reload();
+          }
+            //check data for error
+            if (data.error) {
+               $(".spinner").hide();
+                alert(data.error);
+                return;
+            } else {
+                //notify successful registration
+                $(".spinner").hide();
+                document.getElementById('successful-registration').style.display = "block";
+                document.getElementById('registration-info').style.display = "none";
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+           //reload on error
+            alert("Error: Try again")
+            console.log(errorThrown);
+            console.log(textStatus);
+            console.log(jqXHR);
+        }
+    });
+});
+<% } %>
+</script>

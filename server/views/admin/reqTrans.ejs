@@ -1,0 +1,32 @@
+<% include partials/head %>
+ <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">All request Appointment Transactions</li>
+      </ol>
+		<div class="box_general">
+			<div class="header_box">
+				<h2 class="d-inline-block">request Appointment Transactions list</h2>
+			</div>
+			<div class="list_general">
+				<ul><% for(var i = 0; i < reqTrans.length; i++){%>
+					<li>
+						<figure><img src="/img/avatar1.jpg" alt=""></figure>
+						<small><%= reqTrans[i].timestamp %></small>
+						<h5>Doctor ID : <%= reqTrans[i].doctor.split("#")[1] %></h5>
+						<p>Patient ID : <%=reqTrans[i].patient%><br>
+                           TransactionName: <%=reqTrans[i].$class%><br>
+                           Transaction Id: <%=reqTrans[i].transactionId%><br>
+                           Transaction Date: <%=reqTrans[i].date %><br>
+                           Transaction Time: <%=reqTrans[i].time %><br>
+                          </p>                        
+					</li>
+					<% } %>
+					
+				</ul>
+			</div>
+		</div>

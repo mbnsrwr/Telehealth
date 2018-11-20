@@ -1,0 +1,79 @@
+<% include partials/head %>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Patient Dashboard </a>
+        </li>
+        <li class="breadcrumb-item active">Appointment</li>
+      </ol>
+      <div class="box_general">
+        <div class="header_box">
+          <h2 class="d-inline-block">Appointments List</h2>
+          </div>
+        </div>
+        <div class="list_general">
+         <% if (asset.length == 0) { %>
+                    <h4> No Appointments to show !!</h4>
+                    <div id="toast"><div id="img"><i class="fa fa-fw fa-bell-o"></i></div><div id="desc"> No Appointments to show !! </div></div>
+         <% } %>
+          <ul>
+            <%  for(var i = 0; i < asset.length; i++) { %>
+            <li>
+              <figure>
+                <img src="/img/avatar1.jpg" alt="">
+              </figure>
+              <h4>Dr. <%= doc[i].fName + ' ' + doc[i].lName %>
+              </h4>
+              <ul class="booking_details">
+                <li>
+                  <strong>Booking date</strong> <%= asset[i].date %></li>
+                <li>
+                  <strong>Booking time</strong> <%= asset[i].time  %></li>
+                <li>
+                  <strong>Speciality</strong> <%= doc[i].speciality  %></li>
+                <li>
+                  <strong>Telephone</strong> 0043 432324</li>
+                <li>
+                  <strong>Email</strong>
+                  <%= doc[i].email %>
+                </li>
+              </ul>
+              <ul class="buttons">
+                <li>
+                   <%if(asset[i].status.replace(/"/g, '') === "Appointment Completed") { %>
+                   <i class="approved">Completed</i>
+                   <% } %>
+                  <% if(asset[i].status.replace(/"/g, '') === "Appointment Created") {%> 
+                    <i class="pending">Pending</i>
+                  <% } %>  
+                  <%if(asset[i].status.replace(/"/g, '') === "Appointment Cancelled") { %>
+                    <i class="cancel">Canceled</i>
+                  <% } %>  
+                   <%if(asset[i].status.replace(/"/g, '') === "Appointment Confirmed") { %>
+                    <li>
+                    <i class="approved" style="margin-right:-10px;">Approved</i>
+                    </li>
+                    <%if(asset[i].Access) { %>
+                      <br/>
+                      <li>
+                          <a class="btn_1 gray approve" data-toggle="modal" data-target="#-access" style="margin-top:15px;">
+                              <i class="fa fa-fw fa-check-circle-o"></i> Requested For Record Access !!</a>
+                      </li>
+                      <% } %>
+                    <% } %>
+                </li>
+              </ul>
+            </li>
+            
+            <% } %>
+           
+          </ul>
+        </div>
+      </div>
+      <!-- /box_general-->
+    </div>
+
+
+<% include partials/foot %>

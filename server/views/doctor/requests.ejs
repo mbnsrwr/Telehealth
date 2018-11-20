@@ -1,0 +1,254 @@
+<% include partials/head %>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Bookings </li>
+      </ol>
+      <div class="box_general">
+        <div class="header_box">
+          <h2 class="d-inline-block">Bookings List</h2>
+         </div>
+        <div class="list_general">
+            <ul><li>
+              <% if (data.length == 0) { %>
+                   <h4> No Appointments Requests!!</h4>
+               <div id="toast"><div id="img"><i class="fa fa-fw fa-bell-o"></i></div><div id="desc"> No Appointments Requests!! </div></div>
+              <% } %>
+            </li></ul>
+          <ul>
+            <%  for(var i = 0; i < data.length; i++) { %>
+            <li>
+              <figure>
+                <img src="/img/avatar1.jpg" alt="">
+              </figure>
+              <h4><%= pat[i].fName + ' ' + pat[i].lName %>
+                 <% if(data[i].status.replace(/"/g, '') === "Appointment Created") {%> 
+                    <i class="pending">Pending</i>
+                  <% } %>  
+                  <%if(data[i].status.replace(/"/g, '') === "Appointment Cancelled") { %>
+                    <i class="cancel">Canceled</i>
+                  <% } %>  
+                   <%if(data[i].status.replace(/"/g, '') === "Appointment Confirmed") { %>
+                   <i class="approved">Approved</i>
+                   <% } %>
+                   <%if(data[i].status.replace(/"/g, '') === "Appointment Completed") { %>
+                   <i class="approved">Completed</i>
+                   <% } %>
+              </h4>
+              <ul class="booking_details">
+                <li>
+                  <strong>Booking date</strong> <%= data[i].date %></li>
+                <li>
+                  <strong>Booking time</strong> <%= data[i].time %></li>
+                <li>
+                  <strong>Visits</strong> Cardiology test, Diabetic diagnose</li>
+                <li>
+                  <strong>Telephone</strong> 0043 432324</li>
+                <li>
+                  <strong>Email</strong>
+                  <%= pat[i].email %>
+                </li><li>
+                  <strong>Status</strong>
+                    <%= data[i].status.replace(/"/g, '') %>
+                </li>
+              </ul>
+              <% if(data[i].status.replace(/"/g, '') === "Appointment Created") {%>
+              <ul class="buttons">
+                <li>
+                  <a class="btn_1 gray approve" data-toggle="modal" data-target=<%="#modal-approve" + i %> >
+                    <i class="fa fa-fw fa-check-circle-o"></i>Approve</a>
+                </li>
+                <li>
+                  <p class="inline-popups">
+                    <a href=<%="#modal-reject" + i %> data-effect="mfp-zoom-in" class="btn_1 gray">
+                      <i class="fa fa-fw fa-times-circle-o"></i> Cancel</a>
+                  </p>
+                </li>
+              </ul>
+              <% } %>
+            </li>
+            <% } %>
+             </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- /box_general-->
+    </div>
+    <!-- /container-fluid-->
+  </div>
+      <!-- Approve Modal-->
+  <%  for(var i = 0; i < data.length; i++) { %>    
+    <% if(data[i].status.replace(/"/g, '') === "Appointment Created") {%>
+  <div class="modal tg-appointmentapprove tg-modal fade" id=<%="modal-approve" + i %> tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content tg-modalcontent">
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Appointment Details</h5>
+              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+          </div>
+        <div class="tg-tablescroll">
+          <div class="tg-favoritlistingbox">
+              <ul class="tg-favoritlist">
+                  <li>
+                    <div class="tg-favotirelistcontent">
+                      <figure><a href="#"><img src="/img/img-21.jpg" alt="image description"></a></figure>
+                      <div class="tg-listdata">
+                        <h4><a href="#"><%= pat[i].fName + ' ' + pat[i].lName %></a></h4>
+                        <span><%= pat[i].gender + " DOB " +  pat[i]. dob + " "%></span>
+                      </div>
+                    </div>
+                    <div class="tg-amout">
+                      <em><label class="container">Request Access to Medical History
+                          <input type="checkbox" id = <%= "check"+ i%>  value="check" checked="checked">
+                          <input type="hidden" id = <%= "hidden"+ i%> value = <%= data[i].appointmentId %> >
+                          <span class="checkmark"></span>
+                        </label></em>
+                    </div>
+                  </li>
+                </ul>
+            <div class="tg-visitreason">
+              <div class="tg-leftbox">
+                <h3>Reason For Visit Here</h3>
+                <span><%= data[i].date%></span>
+              </div>
+              <div class="tg-rightbox">
+                <time datetime="2017-12-12"><%= data[i].date%> @ <%= data[i].time%></time>
+              </div>
+            </div>
+            <div class="tg-description">
+              <p>Consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minimniam
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo conequats aute irure dolor in reprehenderit
+                in voluptate velit  totami rem aperiam, eaque ipsa quae.</p>
+            </div>
+            <div class="tg-btnarea">
+                    <a class="btn_1 gray approve" id= <%- '"app' + i + '"'%> >
+                      <i class="fa fa-fw fa-check-circle-o"></i>Approve
+                    </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Reject with reason popup -->
+  <div id= <%- '"modal-reject' + i + '"'%>  class="white-popup mfp-with-anim mfp-hide">
+    <div class="small-dialog-header">
+      <h3>Click Proceed to Cancel the appointment!</h3>
+    </div>
+    <div class="message-reply margin-top-0">
+      <div class="form-group">
+        <!-- textarea cols="40" rows="3" class="form-control"></textarea-->
+      </div>
+      <button id= <%- '"rej' + i + '"'%> class="btn_1" style=" margin-left:350px;">Proceed</button>
+    </div>
+  </div>
+  <% } %>
+<% } %>
+
+<% include partials/foot %>
+<script>
+var apiUrl = location.protocol + '//' + location.host;
+ 
+console.log(apiUrl);
+ <%  for(var i = 0; i < data.length; i++) { %>  
+  <% if(data[i].status.replace(/"/g, '') === "Appointment Created") {%>
+//check user input and call server to create dataset
+$(<%- '"#app'+ i +'"' %>).click(function () {
+    //get user input data
+    var check = $(<%- '"#check'+ i + '"'%> ).is(':checked');
+    console.log(check);
+    var appointId = $( <%- '"#hidden'+ i+ '"' %> ).val();
+    //create json data
+    var inputData = '{' + '"check" : "' + check + '", ' + '"appointId" : "' + appointId + '"}';
+    $.ajax({
+        type: 'POST',
+        url: apiUrl + '/doctor/confirmed-appointmets',
+        data: inputData,
+        dataType: 'json',
+        contentType: 'application/json',
+        beforeSend: function () {
+            //display loading
+           $(".spinner").show();
+        },
+
+        success: function (data) {
+          //display loading
+          if(data.success){
+             location.reload();
+             return;
+          }
+          
+            //check data for error
+            if (data.error) {
+
+            $(".spinner").hide();
+                alert(data.error);
+                return;
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+           //reload on error
+            alert("Error: Try again")
+            console.log(errorThrown);
+            console.log(textStatus);
+            console.log(jqXHR);
+        }
+    });
+});
+
+$(<%- '"#rej'+ i +'"' %>).click(function () {
+    //get user input data
+    var check = $(<%- '"#check'+ i + '"'%> ).val();
+    var appointId = $( <%- '"#hidden'+ i+ '"' %> ).val();
+    //create json data
+    var inputData = '{' + '"check" : "' + check + '", ' + '"appointId" : "' + appointId + '"}';
+    $.ajax({
+        type: 'POST',
+        url: apiUrl + '/doctor/cancel-appointment',
+        data: inputData,
+        dataType: 'json',
+        contentType: 'application/json',
+        beforeSend: function () {
+            //display loading
+             $(".spinner").show();
+        },
+
+        success: function (data) {
+          if(data.success){
+             location.reload();
+
+          }
+             //check data for error
+            if (data.error) {
+                 $(".spinner").hide();
+                alert(data.error);
+                return;
+            } else {
+                //notify successful registration
+                document.getElementById('successful-registration').style.display = "block";
+                document.getElementById('registration-info').style.display = "none";
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+           //reload on error
+            alert("Error: Try again")
+            console.log(errorThrown);
+            console.log(textStatus);
+            console.log(jqXHR);
+        }
+    });
+});
+  <% } %>
+<% } %>
+</script>

@@ -1,0 +1,42 @@
+<% include ../partials/head %>
+
+<main>
+		<div class="bg_color_2">
+			<div class="container margin_60_35">
+				<div id="register">
+					<h1>Login to Find a doctor!</h1>
+					<div class="row justify-content-center">
+						<div class="col-md-7">
+							<form action="/patient/login" method ="post" data-toggle="validator" role="form">
+								<div class="box_form">
+									<div class="form-group">
+										<label>Email</label>
+										<input type="email" name="AccountNum" class="form-control" placeholder="Your identification on the network" required="required" data-error="Proper email is required">
+										<div class="help-block with-errors"style="font-size:15px; color:red;"></div>
+									</div>
+									<div class="form-group">
+										<label>Access Card ID </label>
+										<input type="text" name="CardId" class="form-control" placeholder="access id for your account" required="required" data-error="6 digit access id required">
+										<div class="help-block with-errors"style="font-size:15px; color:red;"></div>
+									</div>
+                                    <div class="form-group text-center add_top_30">
+										<input class="btn_1" type="submit" value="Login">
+									</div>
+								</div>
+								<p class="text-center"><small><a href="./register" style="color: white"> Register Now as a Patient</a></small></p>
+							
+							</form>
+						</div>
+					</div>
+					<!-- /row -->
+					<% if (message == true) { %>
+						<div id="toast"><div id="img"><i class="fa fa-fw fa-bell-o"></i></div><div id="desc"> Login Successful!! </div></div>
+					<% } %>
+				</div>
+				</div>
+				<!-- /register -->
+			</div>
+		</div>
+	</main>
+
+<% include ../partials/foot %>

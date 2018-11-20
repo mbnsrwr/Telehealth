@@ -1,0 +1,87 @@
+<% include partials/head %>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">EHR Views</li>
+      </ol>
+		<div class="box_general">
+			<div class="header_box">
+				<h2 class="d-inline-block">EHR Timeline</h2>
+            </div>
+		</div>
+			
+        <!--/row-->
+        <!-- timeline item 2 -->
+        
+        <%if(med){ %>
+         <% if (med.medications.length == 0) { %>
+                    <h4> No Records to Display!!</h4>
+                    <div id="toast"><div id="img"><i class="fa fa-fw fa-bell-o"></i></div><div id="desc"> No EHR records!! </div></div>
+                    <% } %>
+        <%for(var i = 0; i < med.medications.length; i++){ %>
+        <div class="row" style="clear:both;">
+            <div class="col-auto text-center flex-column d-none d-sm-flex">
+                <div class="row h-50">
+                  
+                </div>
+                <h5 class="m-2">
+                    <span class="badge badge-pill bg-secondary">&nbsp;</span>
+                </h5>
+                <div class="row h-50">
+                  <div class="vl" style = "
+                    border-left: 2px #f8f8f8;
+                    height: 45%;
+                    position: absolute;
+                    left: 50%;
+                    margin-top:0px;
+                    margin-left: -1px;
+                    top: 0;">
+                    </div> 
+                </div>
+            </div>
+            
+            <div class="col py-2">
+                <div class="card border-success shadow">
+                    <div class="card-body">
+                        <div class="float-right text-muted"><%= new Date(med.medications[i].created) %></div>
+                        <h5 class="card-title text-muted"><%= med.medications[i].symptoms %></h5>
+                        <p class="card-text"> <%= med.medications[i].description %></p>
+                        <button class="btn btn-sm btn-outline-secondary float-right" style="clear:both" type="button" data-target=<%="#t2_details" + i %>  data-toggle="collapse">Show Medications ▼</button>
+                        <div class="collapse border" id=<%="t2_details" + i %> >
+                            <div class="p-2 text-monospace">
+                                <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th> Drug </th>
+                                    <th> Dosage  </th>
+                                    <th> Notes </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                             <% for(var j = 0; j < med.medications[i].dosage.length; j++){ %>
+                                <tr>
+                                    <td><%= med.medications[i].medicines[j] %></td>
+                                    <td> <%= med.medications[i].dosage[j] %> time(s) a day</td>
+                                    <td> <%= med.medications[i].notes[j] %></td>
+                                </tr>
+                            <% } %>    
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            </ br>
+
+           <% } 
+        }%>
+        <!--/row-->
+    </div>
+    <!--container-->
+    <% include partials/foot %>
